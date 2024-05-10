@@ -87,8 +87,8 @@ class GAME:
     def first_tile(self,guess):
         if self.__board[guess[1]][guess[0]].get_mines() == -1:
             self.__board[guess[1]][guess[0]].set_mines(-2)
-            self.mine_placer(self.__size,1)
-            self.number_placer(self.__size)
+            self.mine_placer(1)
+            self.number_placer()
         self.guess(guess)
 
     def guess(self,guess):
@@ -176,5 +176,5 @@ class GAME:
             print()
                 
 
-e = GAME((10,8),5)
+#e = GAME((10,8),5)
 
