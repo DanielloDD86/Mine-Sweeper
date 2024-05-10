@@ -36,8 +36,10 @@ class MAIN():
 
         self.bonus_operation = ""
 
+        self.size = (10,8)
+        self.guess_num = 0
         self.ruleset = "Normal"
-        self.game = dr.GAME((10,8),15)
+        self.game = dr.GAME(self.size,15)
         self.button_offset = len(self.buttons)
         self.render_board(self.game.get_board())
 
@@ -272,10 +274,19 @@ class MAIN():
             item.hide()
             
     def guess(self,pos):
-        print("Guess")
+        self.guess_num +=1
+        if self.guess_num == 1:
+            clears = self.game.first_tile(pos)
+        else:
+            clears = self.game.guess(pos)
+        
+        if len(clears) > 0:
+            for item in clears:
+                self.buttons[self.button_offset+item[0]+item[1]*self.size[0]].hide()
 
     def flag(self,pos):
         print("flag")
+        print(pos)
 
     def render_board(self,board):
         #del self.buttons[self.button_offset:]
@@ -285,6 +296,10 @@ class MAIN():
                 back.blit(pygame.image.load(fr"Assets/{self.ruleset}_{item.get_mines()}.png").convert_alpha(),(x*30,y*30))
         self.popups.append(PopUp(back,(5,5)))
         self.popups[-1].show()
+        for y, row in enumerate(board):
+            for x, item in enumerate(row):
+                self.buttons.append(Button_2_func(pygame.image.load(fr"Assets/{self.ruleset}_Unflagged.png"),(self.popups[-1].rect.x + x*30,self.popups[-1].rect.y + y*30),self.guess,self.flag,True,pygame.image.load(fr"Assets/{self.ruleset}_Unflagged_Hover.png"),(x,y),scrollable=False))
+                self.buttons[-1].show()
 
 
 class PopUp:

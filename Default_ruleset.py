@@ -89,17 +89,20 @@ class GAME:
             self.__board[guess[1]][guess[0]].set_mines(-2)
             self.mine_placer(1)
             self.number_placer()
-        self.guess(guess)
+        return self.guess(guess)
 
     def guess(self,guess):
         result = self.__board[guess[1]][guess[0]].reveal()
+        to_hide = []
         if result == True:
             self.running = False
-        else:
+            print("Game Over")
+        elif self.__board[guess[1]][guess[0]].get_mines() == 0:
             stack = S.Stack(18446744073709551615)
             stack.push((self.__board[guess[1]][guess[0]],guess))
             visited = []
             discovered = [self.__board[guess[1]][guess[0]]]
+            to_hide = []
             while stack.is_empty() == False:
                 #print(stack)
                 node = stack.peek()
@@ -120,7 +123,12 @@ class GAME:
                             if self.__board[node[1][1]+i][node[1][0]+o] not in discovered and self.__board[node[1][1]+i][node[1][0]+o].get_mines() == 0:
                                 discovered.append(self.__board[node[1][1]+i][node[1][0]+o])
                                 stack.push((self.__board[node[1][1]+i][node[1][0]+o],(node[1][0]+o,node[1][1]+i)))
+                                to_hide.append((node[1][0]+o,node[1][1]+i))
+                            elif self.__board[node[1][1]+i][node[1][0]+o] not in discovered:
+                                to_hide.append((node[1][0]+o,node[1][1]+i))
                 visited.append(node[0])
+        return to_hide
+        
 
 
         
