@@ -12,7 +12,8 @@ class MAIN():
         pygame.init()
         pygame.mixer.init()
         self.splayer = pygame.mixer.Channel(0)
-        self.screen = pygame.display.set_mode([1536,864])
+        info = pygame.display.Info()
+        self.screen = pygame.display.set_mode([info.current_w, info.current_h])
         #self.FONT = pygame.font.Font("Caffeinated Design/Assets/font.ttf", 32)
         self.global_y_offset = 0
 
@@ -36,6 +37,7 @@ class MAIN():
 
         self.bonus_operation = ""
 
+        self.size_limit = (info.current_w//30,128)
         self.size = (10,8)
         self.mines = 15
         self.guess_num = 0
@@ -225,7 +227,7 @@ class MAIN():
                         button.on_click(event)
 
             if event.type == pygame.MOUSEWHEEL:
-                #self.scroll(event.y)
+                self.scroll(event.y)
                 pass
             
             if event.type == pygame.KEYDOWN:
@@ -336,7 +338,7 @@ class MAIN():
         self.popups[-1].show()
         for y, row in enumerate(board):
             for x, item in enumerate(row):
-                self.buttons.append(Button_2_func(pygame.image.load(fr"Assets/{self.ruleset}_Unflagged.png"),(self.popups[-1].rect.x + x*30,self.popups[-1].rect.y + y*30),self.guess,self.flag,False,pygame.image.load(fr"Assets/{self.ruleset}_Unflagged_Hover.png"),(x,y),scrollable=False))
+                self.buttons.append(Button_2_func(pygame.image.load(fr"Assets/{self.ruleset}_Unflagged.png"),(self.popups[-1].rect.x + x*30,self.popups[-1].rect.y + y*30),self.guess,self.flag,False,pygame.image.load(fr"Assets/{self.ruleset}_Unflagged_Hover.png"),(x,y)))
                 self.buttons[-1].show()
 
     def rerender_back(self,board):
