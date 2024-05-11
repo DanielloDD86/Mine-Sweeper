@@ -128,8 +128,12 @@ class GAME:
                                 to_hide.append((node[1][0]+o,node[1][1]+i))
                 visited.append(node[0])
         return to_hide
+    
+    def flag(self,pos):
+        self.__board[pos[1]][pos[0]].flag()
         
-
+    def get_flagged(self,pos):
+        return self.__board[pos[1]][pos[0]].get_flag()
 
         
 
