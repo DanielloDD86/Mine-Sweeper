@@ -117,7 +117,7 @@ class GAME:
                         elif node[1][0]+o < 0 or node[1][0]+o > self.__size[0]-1:
                             pass
                         else:
-                            print(self.__board[node[1][1]+i][node[1][0]+o].get_mines())
+                            #print(self.__board[node[1][1]+i][node[1][0]+o].get_mines())
                             if self.__board[node[1][1]+i][node[1][0]+o].get_mines() != -1:
                                 self.__board[node[1][1]+i][node[1][0]+o].reveal()
                             if self.__board[node[1][1]+i][node[1][0]+o] not in discovered and self.__board[node[1][1]+i][node[1][0]+o].get_mines() == 0:
@@ -134,6 +134,10 @@ class GAME:
         
     def get_flagged(self,pos):
         return self.__board[pos[1]][pos[0]].get_flag()
+    
+    def get_mines(self,pos):
+        return self.__board[pos[1]][pos[0]].get_mines()
+    
 
         
 
