@@ -14,7 +14,7 @@ class MAIN():
         self.splayer = pygame.mixer.Channel(0)
         info = pygame.display.Info()
         self.screen = pygame.display.set_mode([info.current_w, info.current_h])
-        #self.FONT = pygame.font.Font("Caffeinated Design/Assets/font.ttf", 32)
+        self.FONT = pygame.font.Font("Assets/font.ttf", 32)
         self.global_y_offset = 0
 
         self.buttons = []
@@ -117,6 +117,7 @@ class MAIN():
                     button.update(self.screen)
 
                 except:
+                    print("rendering error")
                     pass
 
         for box in self.textboxes:
@@ -297,9 +298,47 @@ class MAIN():
 
         for item in self.tables:
             item.hide()
+
+    def reveal_around(self,pos):
+        print("dave")
+        no_mines_found = 0
+        mystery_tiles = 0
+        no_mines = self.game.get_board()[pos[1]][pos[0]].get_mines()
+        for i in range(-1,2):
+            for o in range(-1,2):
+                if i == 0 and o == 0:
+                    pass
+                elif pos[1]+i < 0 or pos[1]+i > self.size[1]-1:
+                    pass
+                elif pos[0]+o < 0 or pos[0]+o > self.size[0]-1:
+                    pass
+                else:
+                    print(self.game.get_board()[pos[1]+i][pos[0]+o].get_flag())
+                    if self.game.get_board()[pos[1]+i][pos[0]+o].get_flag() == True:
+                        no_mines_found += 1
+                    elif self.game.get_board()[pos[1]+i][pos[0]+o].get_reveal() == False:
+                        mystery_tiles +=1
+        print(no_mines)
+        print(no_mines_found)
+        if no_mines - no_mines_found == 0:
+            print("rehhhhhhe")
+            for i in range(-1,2):
+                for o in range(-1,2):
+                    if i == 0 and o == 0:
+                        pass
+                    elif pos[1]+i < 0 or pos[1]+i > self.size[1]-1:
+                        pass
+                    elif pos[0]+o < 0 or pos[0]+o > self.size[0]-1:
+                        pass
+                    else:
+                        if self.game.get_flagged((pos[0]+o,pos[1]+i)) == False and self.game.get_board()[pos[1]+i][pos[0]+o].get_reveal() == False:
+                            self.guess((pos[0]+o,pos[1]+i))
+                            self.game.print_board()
+        print("JEFF")
             
     def guess(self,pos):
-        self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].hide()
+        self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]] = Button(pygame.image.load(fr"Assets/{self.ruleset}_Revealer.png").convert_alpha(),(pos[0]*30,pos[1]*30),self.reveal_around,False,None,pos)
+        self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].show()
         self.guess_num +=1
         if self.guess_num == 1:
             clears = self.game.first_tile(pos)
@@ -309,7 +348,8 @@ class MAIN():
         
         if len(clears) > 0:
             for item in clears:
-                self.buttons[self.button_offset+item[0]+item[1]*self.size[0]].hide()
+                self.buttons[self.button_offset+item[0]+item[1]*self.size[0]] = Button(pygame.image.load(fr"Assets/{self.ruleset}_Revealer.png").convert_alpha(),(item[0]*30,item[1]*30),self.reveal_around,False,None,(item[0],item[1]))
+                self.buttons[self.button_offset+item[0]+item[1]*self.size[0]].show()
 
     def flag(self,pos):
         self.game.flag(pos)
@@ -317,14 +357,14 @@ class MAIN():
             self.mines_flagged += 1
             if self.game.get_mines(pos) == -1:
                 self.mines_flagged_correctly += 1 
-            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].image = pygame.image.load(fr"Assets/{self.ruleset}_flagged.png")
-            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].hover_over_image = pygame.image.load(fr"Assets/{self.ruleset}_flagged_Hover.png")
+            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].image = pygame.image.load(fr"Assets/{self.ruleset}_flagged.png").convert_alpha()
+            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].hover_over_image = pygame.image.load(fr"Assets/{self.ruleset}_flagged_Hover.png").convert_alpha()
         else:
             self.mines_flagged -= 1
             if self.game.get_mines(pos) == -1:
                 self.mines_flagged_correctly -= 1 
-            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].image = pygame.image.load(fr"Assets/{self.ruleset}_Unflagged.png")
-            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].hover_over_image = pygame.image.load(fr"Assets/{self.ruleset}_Unflagged_Hover.png")
+            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].image = pygame.image.load(fr"Assets/{self.ruleset}_Unflagged.png").convert_alpha()
+            self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]].hover_over_image = pygame.image.load(fr"Assets/{self.ruleset}_Unflagged_Hover.png").convert_alpha()
 
 
 
