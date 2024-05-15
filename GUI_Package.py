@@ -40,11 +40,12 @@ class MAIN():
         self.size_limit = (info.current_w//30,128)
         self.size = (10,10)
         self.mines = 15
+        self.difficulty = 3
         self.guess_num = 0
         self.mines_flagged = 0
         self.mines_flagged_correctly = 0
         self.ruleset = "Normal"
-        self.game = dr.GAME(self.size,self.mines)
+        self.game = dr.GAME(self.size,self.mines,self.difficulty)
         self.button_offset = len(self.buttons)
         self.render_board(self.game.get_board())
 
