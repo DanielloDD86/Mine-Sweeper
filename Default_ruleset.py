@@ -1,5 +1,6 @@
 from random import randint
 import Stack as S
+import copy as C
 
 class TILE:
 
@@ -39,10 +40,10 @@ class GAME:
         self.__board = self.board_maker()
         self.mine_placer(n_mines)
         self.number_placer()
-        self.__temp_board = self.__board
-        self.first_tile((5,4))
+        self.__temp_board = C.deepcopy(self.__board)
+        #self.first_tile((5,4))
         #self.solvable = self.solver()
-        self.print_board()
+        #self.print_board()
 
     def get_board(self):
         return self.__board
@@ -85,11 +86,26 @@ class GAME:
                     item.set_mines(no_mines)
 
     def first_tile(self,guess):
-        if self.__board[guess[1]][guess[0]].get_mines() == -1:
-            self.__board[guess[1]][guess[0]].set_mines(-2)
-            self.mine_placer(1)
-            self.number_placer()
-        return self.guess(guess)
+        while True:
+            if self.__board[guess[1]][guess[0]].get_mines() == -1:
+                self.__board[guess[1]][guess[0]].set_mines(-2)
+                self.mine_placer(1)
+                self.number_placer()
+            to_hide = self.guess(guess)
+            if self.solver() == False:
+                print("unsolvable")
+                self.__board = []
+                self.__board = self.board_maker()
+                self.mine_placer(self.__n_mines)
+                self.number_placer()
+                self.__temp_board = C.deepcopy(self.__board)
+            else:
+                print("solvable")
+                self.__board = C.deepcopy(self.__temp_board)
+                break
+        
+        return to_hide
+  
 
     def guess(self,guess):
         result = self.__board[guess[1]][guess[0]].reveal()
@@ -145,6 +161,7 @@ class GAME:
                             
     def solver(self):
         moves_in_turn = 1
+        total_mines_found = 0
         while moves_in_turn != 0:
             moves_in_turn = 0
             for y,row in enumerate(self.__board):
@@ -178,11 +195,26 @@ class GAME:
                                             pass
                                         else:
                                             if self.__board[y+i][x+o].get_flag() == False and self.__board[y+i][x+o].get_reveal() == False:
-                                                self.__board[y+i][x+o].reveal()
+                                                self.__board[y+i][x+o].flag()
+                                                total_mines_found += 1
                                                 moves_in_turn+=1
-
-
-        return True
+                        elif no_mines == no_mines_found:
+                            for i in range(-1,2):
+                                for o in range(-1,2):
+                                    if i == 0 and o == 0:
+                                        pass
+                                    elif y+i < 0 or y+i > self.__size[1]-1:
+                                        pass
+                                    elif x+o < 0 or x+o > self.__size[0]-1:
+                                        pass
+                                    else:
+                                        if self.__board[y+i][x+o].get_flag() == False and self.__board[y+i][x+o].get_reveal() == False:
+                                            self.__board[y+i][x+o].reveal()
+                                            moves_in_turn+=1
+            self.print_board()
+        if self.__n_mines == total_mines_found:
+            return True
+        return False
 
 
     def print_board(self):

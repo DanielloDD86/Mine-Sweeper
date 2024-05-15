@@ -38,7 +38,7 @@ class MAIN():
         self.bonus_operation = ""
 
         self.size_limit = (info.current_w//30,128)
-        self.size = (10,8)
+        self.size = (10,10)
         self.mines = 15
         self.guess_num = 0
         self.mines_flagged = 0
@@ -300,7 +300,7 @@ class MAIN():
             item.hide()
 
     def reveal_around(self,pos):
-        print("dave")
+        #print("dave")
         no_mines_found = 0
         mystery_tiles = 0
         no_mines = self.game.get_board()[pos[1]][pos[0]].get_mines()
@@ -313,15 +313,15 @@ class MAIN():
                 elif pos[0]+o < 0 or pos[0]+o > self.size[0]-1:
                     pass
                 else:
-                    print(self.game.get_board()[pos[1]+i][pos[0]+o].get_flag())
+                    #print(self.game.get_board()[pos[1]+i][pos[0]+o].get_flag())
                     if self.game.get_board()[pos[1]+i][pos[0]+o].get_flag() == True:
                         no_mines_found += 1
                     elif self.game.get_board()[pos[1]+i][pos[0]+o].get_reveal() == False:
                         mystery_tiles +=1
-        print(no_mines)
-        print(no_mines_found)
+        #print(no_mines)
+        #print(no_mines_found)
         if no_mines - no_mines_found == 0:
-            print("rehhhhhhe")
+            #print("rehhhhhhe")
             for i in range(-1,2):
                 for o in range(-1,2):
                     if i == 0 and o == 0:
@@ -333,8 +333,8 @@ class MAIN():
                     else:
                         if self.game.get_flagged((pos[0]+o,pos[1]+i)) == False and self.game.get_board()[pos[1]+i][pos[0]+o].get_reveal() == False:
                             self.guess((pos[0]+o,pos[1]+i))
-                            self.game.print_board()
-        print("JEFF")
+                            #self.game.print_board()
+        #print("JEFF")
             
     def guess(self,pos):
         self.buttons[self.button_offset+pos[0]+pos[1]*self.size[0]] = Button(pygame.image.load(fr"Assets/{self.ruleset}_Revealer.png").convert_alpha(),(pos[0]*30,pos[1]*30),self.reveal_around,False,None,pos)
